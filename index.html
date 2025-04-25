@@ -1,0 +1,17 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuentra tu Flora Nativa</title>
+</head>
+<body>
+    {% from "_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.adress) }}
+
+  </dl>
+  <p><input type=submit value=Register>
+</form>
+</body>
+</html>
