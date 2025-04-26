@@ -81,6 +81,7 @@
     <div class="tinder--cards">
       {% for p in profiles %}
       <div class="tinder--card" data-name="{{p['name']}}">
+        <img src="{{p['img']}}" alt="">
         <h3>{{p['name']}}</h3>
         <p>{{p['description']}}</p>
       </div>
