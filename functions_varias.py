@@ -73,7 +73,7 @@ def get_valid_prospects(prospects):
     return valid_prospects
 def generate_prospect_tinder_profile(prospect_dict, apiKey):
     genai.configure(api_key=apiKey)
-    prompt = f"Genera un perfil similar a Tinder para la especie {prospect_dict['accepted_species']} con las siguientes características: {prospect_dict} redactadas de forma divertida y en español, un solo string, no en formato mark down, no más de 100 caracteres"
+    prompt = f"Genera un perfil similar a Tinder para la especie {prospect_dict['accepted_species']} con las siguientes características: {prospect_dict} redactadas de forma divertida y en español, un solo string, no en formato mark down, no más de 150 palabras, no hagas connotaciones románticas, sólo la descripción, no más datos!"
     generation_config = {
     "temperature": 0.1,
     "top_p": 0.95,
@@ -89,20 +89,36 @@ def generate_prospect_tinder_profile(prospect_dict, apiKey):
     response = response.text
     return response
 
-def get_img_url(prospect):
-    prospect = prospect.replace(" ", "-")
-    prospect = prospect.lower()
-    url_busqueda = f"https://fundacionphilippi.cl/catalogo/{prospect}"
+def get_img_href(prospect):
+    prospect = prospect.replace(" ", "+")
+    url_busqueda = f"https://www.herbariodigital.cl/catalog/?search={prospect}&select_category=species&send=Search"
     try:
         response = requests.get(url_busqueda)
         response.raise_for_status()  # Raise an exception for bad status codes
         soup = BeautifulSoup(response.text, 'html.parser')
-        img_tag = soup.find('img')
-        if img_tag and 'src' in img_tag.attrs:
-            img_url = img_tag['src']
-            if not img_url.startswith('http'):
-                img_url = requests.compat.urljoin(url_busqueda, img_url)
-            return img_url
+        img_tag = soup.find_all('a', class_='text-dark', )
+        for img in img_tag:
+            if img and img.get('href'):
+                img_url = img.get('href')
+                if img_url.startswith('/catalog/details/'):
+                    img_url = 'https://www.herbariodigital.cl' + img_url
+                    return img_url
+        else:
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+def get_img_url(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        soup = BeautifulSoup(response.text, 'html.parser')
+        img_tag = soup.find_all('img', {'data-target': '#galleryCarousel'})
+        for img in img_tag:
+            if img and img.get('src'):
+                img_url = img.get('src')
+                if img_url.startswith('https://images.herbariodigital.cl/gallery/'):
+                    return img_url
         else:
             return None
     except requests.exceptions.RequestException as e:

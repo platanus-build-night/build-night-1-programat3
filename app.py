@@ -7,7 +7,7 @@ from flask_googlemaps import get_coordinates, GoogleMaps
 
 from wtforms import Form, BooleanField, StringField, validators
 
-from functions_varias import get_zone, generate_prospect_tinder_profile, get_prospects, get_prospect_details, get_img_url, get_valid_prospects
+from functions_varias import get_zone, generate_prospect_tinder_profile, get_prospects, get_prospect_details, get_img_url, get_valid_prospects, get_img_href
 
 app = Flask(__name__)
 
@@ -35,13 +35,14 @@ def geoloc():
         # Check if there are valid prospects
         profiles = []  # Initialize the dictionary correctly
         for p in prospects:
-            #url = get_img_url(p)
+            href = get_img_href(p)
+            url = get_img_url(href)
             prospect_details = get_prospect_details(p)
             if prospect_details:  # Ensure prospect details exist
                 tinder_p = generate_prospect_tinder_profile(prospect_details, app.config["GEMINI_KEY"])
                 profiles.append({  # Properly populate the dictionary
                     "description": tinder_p,
-                    "img": "-",
+                    "img": url,
                     "name": p
                 })
         print(profiles)

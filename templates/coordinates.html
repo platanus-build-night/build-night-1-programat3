@@ -1,276 +1,158 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encuentra tu Flora Nativa</title>
-    <style>
-        *, *:before, *:after {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Encuentra tu Flora Nativa</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
 
-body {
-  background: #CCFBFE;
-  overflow: hidden;
-  font-family: sans-serif;
-}
+    .tinder {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      height: 70vh;
+    }
 
-.tinder {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  opacity: 0;
-  transition: opacity 0.1s ease-in-out;
-}
+    .tinder--card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
 
-.loaded.tinder {
-  opacity: 1;
-}
+    .tinder--card h3 {
+      margin: 0;
+      font-size: 24px;
+    }
 
-.tinder--status {
-  position: absolute;
-  top: 50%;
-  margin-top: -30px;
-  z-index: 2;
-  width: 100%;
-  text-align: center;
-  pointer-events: none;
-}
+    .tinder--card p {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #555;
+    }
 
-.tinder--status i {
-  font-size: 100px;
-  opacity: 0;
-  transform: scale(0.3);
-  transition: all 0.2s ease-in-out;
-  position: absolute;
-  width: 100px;
-  margin-left: -50px;
-}
+    .tinder--buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 20px;
+    }
 
-.tinder_love .fa-heart {
-  opacity: 0.7;
-  transform: scale(1);
-}
+    .tinder--buttons button {
+      background: none;
+      border: 2px solid #000;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 20px;
+      cursor: pointer;
+    }
 
-.tinder_nope .fa-remove {
-  opacity: 0.7;
-  transform: scale(1);
-}
+    #accepted-list {
+      display: none;
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
 
-.tinder--cards {
-  flex-grow: 1;
-  padding-top: 40px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  z-index: 1;
-}
-
-.tinder--card {
-  display: inline-block;
-  width: 90vw;
-  max-width: 400px;
-  height: 70vh;
-  background: #FFFFFF;
-  padding-bottom: 40px;
-  border-radius: 8px;
-  overflow: hidden;
-  position: absolute;
-  will-change: transform;
-  transition: all 0.3s ease-in-out;
-  cursor: -webkit-grab;
-  cursor: -moz-grab;
-  cursor: grab;
-}
-
-.moving.tinder--card {
-  transition: none;
-  cursor: -webkit-grabbing;
-  cursor: -moz-grabbing;
-  cursor: grabbing;
-}
-
-.tinder--card img {
-  max-width: 100%;
-  pointer-events: none;
-}
-
-.tinder--card h3 {
-  margin-top: 32px;
-  font-size: 32px;
-  padding: 0 16px;
-  pointer-events: none;
-}
-
-.tinder--card p {
-  margin-top: 24px;
-  font-size: 20px;
-  padding: 0 16px;
-  pointer-events: none;
-}
-
-.tinder--buttons {
-  flex: 0 0 100px;
-  text-align: center;
-  padding-top: 20px;
-}
-
-.tinder--buttons button {
-  border-radius: 50%;
-  line-height: 60px;
-  width: 60px;
-  border: 0;
-  background: #FFFFFF;
-  display: inline-block;
-  margin: 0 8px;
-}
-
-.tinder--buttons button:focus {
-  outline: 0;
-}
-
-.tinder--buttons i {
-  font-size: 32px;
-  vertical-align: middle;
-}
-
-.fa-heart {
-  color: #FFACE4;
-}
-
-.fa-remove {
-  color: #CDD6DD;
-}
-
-    </style>
-<script>
-    'use strict';
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var tinderContainer = document.querySelector('.tinder');
-        var allCards = document.querySelectorAll('.tinder--card');
-        var nope = document.getElementById('nope');
-        var love = document.getElementById('love');
-
-        function initCards(card, index) {
-            var newCards = document.querySelectorAll('.tinder--card:not(.removed)');
-
-            newCards.forEach(function (card, index) {
-                card.style.zIndex = allCards.length - index;
-                card.style.transform = 'scale(' + (20 - index) / 20 + ') translateY(-' + 30 * index + 'px)';
-                card.style.opacity = (10 - index) / 10;
-            });
-
-            tinderContainer.classList.add('loaded');
-        }
-
-        initCards();
-
-        allCards.forEach(function (el) {
-            var hammertime = new Hammer(el);
-
-            hammertime.on('pan', function (event) {
-                el.classList.add('moving');
-            });
-
-            hammertime.on('pan', function (event) {
-                if (event.deltaX === 0) return;
-                if (event.center.x === 0 && event.center.y === 0) return;
-
-                tinderContainer.classList.toggle('tinder_love', event.deltaX > 0);
-                tinderContainer.classList.toggle('tinder_nope', event.deltaX < 0);
-
-                var xMulti = event.deltaX * 0.03;
-                var yMulti = event.deltaY / 80;
-                var rotate = xMulti * yMulti;
-
-                event.target.style.transform = 'translate(' + event.deltaX + 'px, ' + event.deltaY + 'px) rotate(' + rotate + 'deg)';
-            });
-
-            hammertime.on('panend', function (event) {
-                el.classList.remove('moving');
-                tinderContainer.classList.remove('tinder_love');
-                tinderContainer.classList.remove('tinder_nope');
-
-                var moveOutWidth = document.body.clientWidth;
-                var keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5;
-
-                event.target.classList.toggle('removed', !keep);
-
-                if (keep) {
-                    event.target.style.transform = '';
-                } else {
-                    var endX = Math.max(Math.abs(event.velocityX) * moveOutWidth, moveOutWidth);
-                    var toX = event.deltaX > 0 ? endX : -endX;
-                    var endY = Math.abs(event.velocityY) * moveOutWidth;
-                    var toY = event.deltaY > 0 ? endY : -endY;
-                    var xMulti = event.deltaX * 0.03;
-                    var yMulti = event.deltaY / 80;
-                    var rotate = xMulti * yMulti;
-
-                    event.target.style.transform = 'translate(' + toX + 'px, ' + (toY + event.deltaY) + 'px) rotate(' + rotate + 'deg)';
-                    initCards();
-                }
-            });
-        });
-
-        function createButtonListener(love) {
-            return function (event) {
-                var cards = document.querySelectorAll('.tinder--card:not(.removed)');
-                var moveOutWidth = document.body.clientWidth * 1.5;
-
-                if (!cards.length) return false;
-
-                var card = cards[0];
-
-                card.classList.add('removed');
-
-                if (love) {
-                    card.style.transform = 'translate(' + moveOutWidth + 'px, -100px) rotate(-30deg)';
-                } else {
-                    card.style.transform = 'translate(-' + moveOutWidth + 'px, -100px) rotate(30deg)';
-                }
-
-                initCards();
-
-                event.preventDefault();
-            };
-        }
-
-        var nopeListener = createButtonListener(false);
-        var loveListener = createButtonListener(true);
-
-        nope.addEventListener('click', nopeListener);
-        love.addEventListener('click', loveListener);
-    });
-</script>
+    #accepted-list li {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 </head>
 <body>
-    <div class="tinder">
-        <div class="tinder--status">
-          <i class="fa fa-remove"></i>
-          <i class="fa fa-heart"></i>
-        </div>
-      
-        <div class="tinder--cards">
-        {% for p in profiles %}
-          <div class="tinder--card">
-            <h3>{{p['name']}}</h3>
-            <p>{{p['description']}}</p>
-          </div>
-
-        {% endfor %}
-        </div>
-        <div class="tinder--buttons">
-          <button id="nope"><i class="fa fa-remove"></i></button>
-          <button id="love"><i class="fa fa-heart"></i></button>
-        </div>
+  <div class="tinder">
+    <div class="tinder--cards">
+      {% for p in profiles %}
+      <div class="tinder--card" data-name="{{p['name']}}">
+        <h3>{{p['name']}}</h3>
+        <p>{{p['description']}}</p>
+      </div>
+      {% endfor %}
     </div>
-    
+  </div>
+
+  <div class="tinder--buttons">
+    <button id="nope">✕</button>
+    <button id="love">❤</button>
+  </div>
+
+  <ul id="accepted-list"></ul>
+
+  <script>
+    const cardsContainer = document.querySelector('.tinder--cards');
+    const cards = Array.from(cardsContainer.children);
+    const loveBtn = document.getElementById('love');
+    const nopeBtn = document.getElementById('nope');
+    const acceptedList = document.getElementById('accepted-list');
+    let accepted = [];
+
+    function updateCards() {
+      const newCards = document.querySelectorAll('.tinder--card:not(.removed)');
+      newCards.forEach((card, i) => {
+        card.style.zIndex = cards.length - i;
+        card.style.transform = `scale(${1 - i * 0.05}) translateY(-${i * 10}px)`;
+        card.style.opacity = `${1 - i * 0.1}`;
+      });
+
+      if (!newCards.length) {
+        showAccepted();
+      }
+    }
+
+    function handleSwipe(card, isAccepted) {
+      card.classList.add('removed');
+      card.style.transform = `translate(${isAccepted ? '' : '-'}100vw, -50px) rotate(${isAccepted ? '' : '-'}20deg)`;
+      if (isAccepted) {
+        accepted.push(card.dataset.name);
+      }
+      setTimeout(updateCards, 300);
+    }
+
+    loveBtn.addEventListener('click', () => {
+      const card = document.querySelector('.tinder--card:not(.removed)');
+      if (card) handleSwipe(card, true);
+    });
+
+    nopeBtn.addEventListener('click', () => {
+      const card = document.querySelector('.tinder--card:not(.removed)');
+      if (card) handleSwipe(card, false);
+    });
+
+    cards.forEach(card => {
+      const hammer = new Hammer(card);
+      hammer.on('swipeleft', () => handleSwipe(card, false));
+      hammer.on('swiperight', () => handleSwipe(card, true));
+    });
+
+    function showAccepted() {
+      document.querySelector('.tinder').style.display = 'none';
+      document.querySelector('.tinder--buttons').style.display = 'none';
+      acceptedList.style.display = 'block';
+      accepted.forEach(name => {
+        const li = document.createElement('li');
+        li.textContent = name;
+        acceptedList.appendChild(li);
+      });
+    }
+
+    updateCards();
+  </script>
 </body>
 </html>
