@@ -27,10 +27,8 @@ def geoloc():
         coordinates = get_coordinates(address_text=adress, API_KEY=app.config["GOOGLEMAPS_KEY"])
         zone = get_zone(coordinates["lat"], coordinates["lng"], apiKey=app.config["GEMINI_KEY"])[0]
         prospects_unfiltered = get_prospects(zone)
-        print(prospects_unfiltered)
         # Filter out invalid prospects
         prospects = random.shuffle(get_valid_prospects(prospects_unfiltered))[:5]
-        print(prospects)
         # Check if there are valid prospects
         profiles = []  # Initialize the dictionary correctly
         for p in prospects:
@@ -44,6 +42,5 @@ def geoloc():
                     "img": url,
                     "name": p
                 })
-        print(profiles)
         return render_template("coordinates.html", profiles=profiles)
     return render_template("index.html", form=form)
