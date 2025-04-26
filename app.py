@@ -16,7 +16,7 @@ app.config.from_file("config.json", load= json.load)
 GoogleMaps(app, key=app.config["GOOGLEMAPS_KEY"])
 
 class GeolocForm(Form):
-    adress = StringField("Address", [validators.Length(min=1, max=200)])
+    adress = StringField("Dirección Completa", [validators.Length(min=1, max=200)])
     submit = BooleanField("Submit")
 
 
