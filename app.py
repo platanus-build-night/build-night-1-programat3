@@ -28,7 +28,13 @@ def geoloc():
         zone = get_zone(coordinates["lat"], coordinates["lng"], apiKey=app.config["GEMINI_KEY"])[0]
         prospects_unfiltered = get_prospects(zone)
         # Filter out invalid prospects
-        prospects = random.shuffle(get_valid_prospects(prospects_unfiltered))[:5]
+        prospects = get_valid_prospects(prospects_unfiltered)
+        prospects = list(set(prospects))  # Remove duplicates
+        # Randomly select 5 prospects
+        if len(prospects) > 5:
+            prospects = random.sample(prospects, 5)
+        else:
+            prospects = random.sample(prospects, len(prospects))
         # Check if there are valid prospects
         profiles = []  # Initialize the dictionary correctly
         for p in prospects:
@@ -42,5 +48,6 @@ def geoloc():
                     "img": url,
                     "name": p
                 })
+        print(profiles)
         return render_template("coordinates.html", profiles=profiles)
     return render_template("index.html", form=form)
