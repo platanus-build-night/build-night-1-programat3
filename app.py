@@ -48,6 +48,5 @@ def geoloc():
                     "img": url,
                     "name": p
                 })
-        print(profiles)
         return render_template("coordinates.html", profiles=profiles)
     return render_template("index.html", form=form)
