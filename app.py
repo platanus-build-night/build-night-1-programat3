@@ -7,6 +7,7 @@ from flask_googlemaps import get_coordinates, GoogleMaps
 
 from wtforms import Form, BooleanField, StringField, validators
 
+from functions_varias import get_zone, 
 app = Flask(__name__)
 
 app.config.from_file("config.json", load= json.load)
@@ -24,5 +25,6 @@ def geoloc():
     if request.method == "POST" and form.validate():
         adress = form.adress.data
         coordinates = get_coordinates(address_text=adress, API_KEY=app.config["GOOGLEMAPS_KEY"])
+        
         return render_template("coordinates.html",coordinates=coordinates)
     return render_template("index.html", form=form)
