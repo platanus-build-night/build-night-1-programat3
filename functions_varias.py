@@ -23,7 +23,6 @@ def get_zone(latitude, longitude, apiKey):
     response = model.generate_content(prompt)
     response = response.text.split(",")
     response = list(map(str.strip, response))
-    print(response)
     return response
 
 def normalize_parameter(parameter):
@@ -41,7 +40,6 @@ def get_prospects(subZone):
         data = json.load(file)
     subZone = normalize_parameter(subZone)
     prospects_full = []
-    print(subZone)
     for r in data:
         try:
             chosen_sr = r[subZone]

@@ -3,8 +3,7 @@ from flask import Flask, render_template, request
 import json
 
 from flask_googlemaps import get_coordinates, GoogleMaps
-
-
+import random
 from wtforms import Form, BooleanField, StringField, validators
 
 from functions_varias import get_zone, generate_prospect_tinder_profile, get_prospects, get_prospect_details, get_img_url, get_valid_prospects, get_img_href
@@ -30,7 +29,7 @@ def geoloc():
         prospects_unfiltered = get_prospects(zone)
         print(prospects_unfiltered)
         # Filter out invalid prospects
-        prospects = get_valid_prospects(prospects_unfiltered)[:5]
+        prospects = random.shuffle(get_valid_prospects(prospects_unfiltered))[:5]
         print(prospects)
         # Check if there are valid prospects
         profiles = []  # Initialize the dictionary correctly
