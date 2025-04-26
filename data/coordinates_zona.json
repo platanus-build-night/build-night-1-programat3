@@ -19,7 +19,7 @@
       "adminRegions": ["Región de Tarapacá", "Región de Antofagasta"],
       "centroid": { "latitude_s": 21.6, "longitude_w": 69.75 }
     },
-    "LOS ANDES MEDITERRÁNEOS": {
+    "ANDES MEDITERRÁNEOS": {
       "adminRegions": ["Región de Coquimbo", "Región de Valparaíso", "Región Metropolitana", "Región del Maule"],
       "centroid": { "latitude_s": 33.33, "longitude_w": 71.15 }
     },
@@ -55,11 +55,11 @@
       "adminRegions": ["Región de Valparaíso"],
       "centroid": { "latitude_s": 33.65, "longitude_w": 78.82 }
     },
-    "LAS CORDILLERAS DE LA ARAUCANÍA": {
+    "CORDILLERAS DE LA ARAUCANÍA": {
       "adminRegions": ["Región del Biobío", "Región de La Araucanía", "Región de Los Lagos"],
       "centroid": { "latitude_s": 39.6, "longitude_w": 72.33 }
     },
-    "LAS CORDILLERAS PATAGÓNICAS": {
+    "CORDILLERAS PATAGÓNICAS": {
       "adminRegions": ["Región de Aysén", "Región de Magallanes y Antártica Chilena"],
       "centroid": { "latitude_s": 49.63, "longitude_w": 71.0 }
     },
@@ -71,7 +71,7 @@
       "adminRegions": ["Región de Aysén", "Región de Magallanes y Antártica Chilena"],
       "centroid": { "latitude_s": 49.63, "longitude_w": 71.0 }
     },
-    "LAS TURBERAS, DEL MATORRAL Y DE LA ESTEPA PANTANOSA": {
+    "TURBERAS, DEL MATORRAL Y DE LA ESTEPA PANTANOSA": {
       "adminRegions": ["Región de Aysén", "Región de Magallanes y Antártica Chilena"],
       "centroid": { "latitude_s": 49.63, "longitude_w": 71.0 }
     },
@@ -79,7 +79,7 @@
       "adminRegions": ["Región de Aysén"],
       "centroid": { "latitude_s": 45.75, "longitude_w": 72.0 }
     },
-    "LA ESTEPA PATAGÓNICA DE MAGALLANES": {
+    "ESTEPA PATAGÓNICA DE MAGALLANES": {
       "adminRegions": ["Región de Magallanes y Antártica Chilena"],
       "centroid": { "latitude_s": 53.5, "longitude_w": 70.0 }
     }

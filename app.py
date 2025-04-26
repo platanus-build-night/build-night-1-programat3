@@ -7,7 +7,7 @@ from flask_googlemaps import get_coordinates, GoogleMaps
 
 from wtforms import Form, BooleanField, StringField, validators
 
-from functions_varias import get_zone, generate_prospect_tinder_profile, get_prospects, get_prospect_details, get_img_url
+from functions_varias import get_zone, generate_prospect_tinder_profile, get_prospects, get_prospect_details, get_img_url, get_valid_prospects
 
 app = Flask(__name__)
 
@@ -26,20 +26,24 @@ def geoloc():
     if request.method == "POST" and form.validate():
         adress = form.adress.data
         coordinates = get_coordinates(address_text=adress, API_KEY=app.config["GOOGLEMAPS_KEY"])
-        zone, nombre = get_zone(coordinates["lat"], coordinates["lng"], apiKey=app.config["GEMINI_KEY"])
-        prospects = get_prospects(zone=zone, nombre=nombre)
-        
-        dict_prospect_profiles = {}  # Initialize the dictionary correctly
+        zone = get_zone(coordinates["lat"], coordinates["lng"], apiKey=app.config["GEMINI_KEY"])[0]
+        prospects_unfiltered = get_prospects(zone)
+        print(prospects_unfiltered)
+        # Filter out invalid prospects
+        prospects = get_valid_prospects(prospects_unfiltered)[:5]
+        print(prospects)
+        # Check if there are valid prospects
+        profiles = []  # Initialize the dictionary correctly
         for p in prospects:
-            url = get_img_url(p)
+            #url = get_img_url(p)
             prospect_details = get_prospect_details(p)
             if prospect_details:  # Ensure prospect details exist
                 tinder_p = generate_prospect_tinder_profile(prospect_details, app.config["GEMINI_KEY"])
-                dict_prospect_profiles[p] = {  # Properly populate the dictionary
+                profiles.append({  # Properly populate the dictionary
                     "description": tinder_p,
-                    "img": url,
+                    "img": "-",
                     "name": p
-                }
-        
-        return render_template("coordinates.html", profiles=dict_prospect_profiles)
+                })
+        print(profiles)
+        return render_template("coordinates.html", profiles=profiles)
     return render_template("index.html", form=form)
